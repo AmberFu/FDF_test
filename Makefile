@@ -6,7 +6,7 @@
 #    By: pfu <spashleyfu@gmail.com>                 +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/17 19:35:01 by pfu               #+#    #+#              #
-#    Updated: 2019/11/19 17:44:28 by pfu              ###   ########.fr        #
+#    Updated: 2019/12/14 20:56:22 by pfu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ LIBDIR = libft/
 
 SRCDIR = src/
 
-SRC = src/*.c
+SRC = src/main.c \
+	  src/read_draw.c
 
 OBJ = $(SRC:.c=.o)
 

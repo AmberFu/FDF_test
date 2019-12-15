@@ -6,35 +6,22 @@
 /*   By: pfu <spashleyfu@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/17 20:04:15 by pfu               #+#    #+#             */
-/*   Updated: 2019/11/19 22:16:33 by pfu              ###   ########.fr       */
+/*   Updated: 2019/12/14 21:03:40 by pfu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-t_grid	*get_xy(char *line, int row)
+t_grid	*get_grid(char *line, int row)
 {
 	t_grid	*grid;
 
 	if ((grid = (t_grid *)malloc(sizeof(t_grid))) == NULL)
 		return (NULL);
 	grid->row = row;
-	grid->arr = ft_strsplit(line, ' ');
+	grid->arr = ft_strdup(line);
 	grid->next = NULL;
 	return (grid);
-}
-
-void	print_arr(char **arr)
-{
-	char	*ptr;
-
-	ptr = *arr;
-	while (ptr != NULL)
-	{
-		printf(" \"%s\" ", ptr);
-		ptr++;
-	}
-	printf("\n");
 }
 
 void	print_grid_array(t_grid **grid_head)
@@ -46,36 +33,56 @@ void	print_grid_array(t_grid **grid_head)
 	ptr = *grid_head;
 	while (ptr != NULL)
 	{
-		printf("row[%d]: arr = ", ptr->row);
-		print_arr(ptr->arr);
+		ft_putstr("row[");
+		ft_putnbr(i);
+		ft_putstr("] ");
+		ft_putstr("ptr->arr = \n");
+		ft_putstr(ptr->arr);
+		ft_putchar('\n');
 		ptr = ptr->next;
 		i++;
 	}
 }
 
-void	read_draw_fdf(int fd)
+void	free_grid(t_grid **grid_head)
+{
+	t_grid  *ptr;
+
+	ptr = *grid_head;
+	while (ptr != NULL)
+	{
+		free(ptr->arr);
+		ptr = ptr->next;
+	}
+	free(grid_head);
+}
+
+int		read_draw_fdf(int fd)
 {
 	int		x;
 	char	*line;
+	t_grid	*grid_ptr;
 	t_grid	**grid_head;
-	t_grid	*prev;
 
 	x = 0;
-	grid_head = NULL;
+	if ((grid_head = (t_grid **)malloc(sizeof(t_grid *))) == NULL)
+		return (-1);
 	while (get_next_line(fd, &line) > 0)
 	{
-		if (x == 0)
+		if (x == 0) //First list
 		{
-			*grid_head = get_xy(line, x);
-			prev = *grid_head;
+			grid_ptr = get_grid(line, x);
+			grid_head = &grid_ptr;
 		}
-		else
+		else //others
 		{
-			prev->next = get_xy(line, x);
-			prev = prev->next;
+			grid_ptr->next = get_grid(line, x);
+			grid_ptr = grid_ptr->next;
 		}
-		print_grid_array(grid_head);
 		free(line);
 		x++;
 	}
+	print_grid_array(grid_head);
+	//free_grid(grid_head);
+	return (0);
 }

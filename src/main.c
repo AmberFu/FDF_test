@@ -6,7 +6,7 @@
 /*   By: pfu <spashleyfu@gmail.com>                 +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 17:55:51 by pfu               #+#    #+#             */
-/*   Updated: 2019/11/19 18:02:35 by pfu              ###   ########.fr       */
+/*   Updated: 2019/12/14 21:00:07 by pfu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,14 @@ int		print_error(void)
 
 int		main(int ac, char **av)
 {
-	int	fd;
+	int		fd;
 
 	if (ac != 2)
 		return (print_usage());
 	if ((fd = open(av[1], O_RDONLY)) < 0)
 		return (print_error());
-	read_draw_fdf(fd);
+	/* Read file and draw it: */
+	if (read_draw_fdf(fd) < 0)
+		return (print_error());
 	return (0);
 }
